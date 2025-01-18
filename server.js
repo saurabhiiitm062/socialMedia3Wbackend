@@ -10,10 +10,11 @@ connectDB();
 
 // Define allowed origins for CORS
 const allowedOrigins = ["https://3wsocialmedia.netlify.app"];
+
+// CORS setup
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests from allowed origins or no origin (for same-origin requests)
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
@@ -32,7 +33,7 @@ app.use(express.static("public/uploads"));
 app.get("/api", (req, res) => {
   res.send("API is working!");
 });
-app.use("/api", userRoutes);
+app.use("/api", userRoutes); // Use user-related routes
 
 // Event handling with Server-Sent Events (SSE)
 app.get("/events", (req, res) => {
@@ -42,7 +43,7 @@ app.get("/events", (req, res) => {
   res.flushHeaders();
 
   addClient(res);
-  req.on("close", () => removeClient(res));
+  req.on("close", () => removeClient(res)); // Clean up after the connection is closed
 });
 
 // Start the server
