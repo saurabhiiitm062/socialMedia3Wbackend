@@ -25,18 +25,18 @@ app.use(
           origin.match(new RegExp(`^${allowedOrigin.replace("*", ".*")}$`))
         )
       ) {
-        callback(null, true);
+        callback(null, true); // Allow the request
       } else {
-        callback(new Error("Not allowed by CORS"));
+        callback(new Error("Not allowed by CORS")); // Block the request
       }
     },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Explicitly handle OPTIONS
-    credentials: true, // Allow credentials
-    allowedHeaders: ["Content-Type", "Authorization"], // Ensure headers are allowed
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allow necessary methods
+    credentials: true, // Allow credentials like cookies
+    allowedHeaders: ["Content-Type", "Authorization"], // Allow necessary headers
   })
 );
 
-// Handle preflight requests explicitly for OPTIONS method
+// Handle preflight requests (OPTIONS method)
 app.options("*", cors()); // Allow preflight OPTIONS requests for all routes
 
 app.use(express.json());
