@@ -15,12 +15,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "headers": {
-        "Access-Control-Allow-Origin": "https://3wsocialmedia.netlify.app",
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization"
-      },
-      "dest": "/"
+      "destination": "/"
     }
   ]
 }
