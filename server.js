@@ -11,7 +11,9 @@ connectDB();
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static("uploads"));
+
+app.use(express.static("public/uploads"));
+
 // Example API route
 app.get("/api", (req, res) => {
   res.send("API is working!");
@@ -31,5 +33,5 @@ app.get("/events", (req, res) => {
 });
 
 app.listen(process.env.PORT, () =>
-  console.log(`server is running on port ${process.env.PORT}`)
+  console.log(`Server is running on port ${process.env.PORT}`)
 );
