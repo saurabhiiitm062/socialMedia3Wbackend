@@ -11,24 +11,33 @@ connectDB();
 // Define allowed origins for CORS
 const allowedOrigins = [
   "https://3wsocialmedia.netlify.app",
-  "https://*.netlify.app",
+  "https://*.netlify.app", // Wildcard for any subdomain under netlify.app
 ];
 
-
-// CORS setup
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      console.log("CORS Origin: " + origin);
+      // Allow requests from allowed origins or no origin (for same-origin requests)
+      if (
+        !origin ||
+        allowedOrigins.some((allowedOrigin) =>
+          origin.match(new RegExp(`^${allowedOrigin.replace("*", ".*")}$`))
+        )
+      ) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
       }
     },
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Explicitly handle OPTIONS
+    credentials: true, // Allow credentials
+    allowedHeaders: ["Content-Type", "Authorization"], // Ensure headers are allowed
   })
 );
+
+// Handle preflight requests explicitly for OPTIONS method
+app.options("*", cors()); // Allow preflight OPTIONS requests for all routes
 
 app.use(express.json());
 app.use(express.static("public/uploads"));
