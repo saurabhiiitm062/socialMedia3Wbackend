@@ -36,10 +36,13 @@ app.use(
   })
 );
 
-// Handle preflight requests (OPTIONS method)
+// Explicitly handle preflight requests (OPTIONS method) for all routes
 app.options("*", cors()); // Allow preflight OPTIONS requests for all routes
 
+// Middleware to parse JSON requests
 app.use(express.json());
+
+// Serve static files from the "uploads" directory
 app.use(express.static("public/uploads"));
 
 // Example API route
