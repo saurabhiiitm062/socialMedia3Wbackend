@@ -9,7 +9,11 @@ const app = express();
 connectDB();
 
 // Define allowed origins for CORS
-const allowedOrigins = ["https://3wsocialmedia.netlify.app"];
+const allowedOrigins = [
+  "https://3wsocialmedia.netlify.app",
+  "https://*.netlify.app",
+];
+
 
 // CORS setup
 app.use(
