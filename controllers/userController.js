@@ -8,6 +8,7 @@ const { notifyClients } = require("./eventsHandler");
 const createUser = async (req, res) => {
   const { name, socialHandle } = req.body;
   const imagePaths = req.files.map((file) => file.path.replace(/\\/g, "/"));
+  console.log(imagePaths,"img path")
 
   try {
     const user = new User({ name, socialHandle, images: imagePaths });
@@ -16,7 +17,7 @@ const createUser = async (req, res) => {
     await notifyClients();
     res.status(201).json({ message: "User submitted successfully!", user });
   } catch (error) {
-    console.log("Error creating user:", error);
+    console.log("Error creating user:", error.message);
     res.status(500).json({ message: "Error submitting user", error });
   }
 };
@@ -47,12 +48,12 @@ const adminRegistration = async (req, res) => {
     }
 
     // Hash the password before saving
-    const hashedPassword = await bcrypt.hash(password, 10); 
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const newAdmin = new Admin({
       email,
       password: hashedPassword,
-      role: role || "admin", 
+      role: role || "admin",
     });
 
     await newAdmin.save();

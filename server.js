@@ -9,31 +9,17 @@ const app = express();
 connectDB();
 
 // Define allowed origins for CORS
-const allowedOrigins = [
-  "https://3wsocialmedia.netlify.app", // Frontend URL
-];
+const allowedOrigins = ["http://localhost:3000"]; // Frontend URL
 
 // CORS middleware configuration
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true); // Allow the request
-      } else {
-        callback(new Error("Not allowed by CORS")); // Block the request
-      }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"], // Allow necessary methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow necessary headers
-    credentials: true, // Allow credentials like cookies
+    origin: "*", // Specify allowed origins
   })
 );
 
 // Middleware to parse JSON requests
 app.use(express.json());
-
-// Explicitly handle preflight requests (OPTIONS method)
-app.options("*", cors()); // Handle all preflight OPTIONS requests
 
 // Serve static files from the "uploads" directory
 app.use("/uploads", express.static("public/uploads"));
