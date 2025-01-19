@@ -11,18 +11,20 @@ connectDB();
 // Define allowed origins for CORS
 const allowedOrigins = [
   "https://3wsocialmedia.netlify.app",
-  "https://*.netlify.app", // Wildcard for any subdomain under netlify.app
+  /\.netlify\.app$/, // Regex for any subdomain under netlify.app
 ];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      console.log("CORS Origin: " + origin);
-      // Allow requests from allowed origins or no origin (for same-origin requests)
+      console.log("CORS Origin:", origin);
+      // Allow requests from Postman, same-origin, or no origin (e.g., SSR)
       if (
         !origin ||
         allowedOrigins.some((allowedOrigin) =>
-          origin.match(new RegExp(`^${allowedOrigin.replace("*", ".*")}$`))
+          typeof allowedOrigin === "string"
+            ? origin === allowedOrigin
+            : allowedOrigin.test(origin)
         )
       ) {
         callback(null, true); // Allow the request
@@ -30,24 +32,21 @@ app.use(
         callback(new Error("Not allowed by CORS")); // Block the request
       }
     },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allow necessary methods
-    credentials: true, // Allow credentials like cookies
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow necessary headers
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-// Explicitly handle preflight requests (OPTIONS method) for all routes
-app.options("*", cors()); // Allow preflight OPTIONS requests for all routes
 
 // Middleware to parse JSON requests
 app.use(express.json());
 
 // Serve static files from the "uploads" directory
-app.use(express.static("public/uploads"));
+app.use("/uploads", express.static("public/uploads"));
 
 // Example API route
-app.get("/api", (req, res) => {
-  res.send("API is working!");
+app.get("/", (req, res) => {
+  res.json({ message: "API is working!" });
 });
 app.use("/api", userRoutes); // Use user-related routes
 
@@ -59,9 +58,11 @@ app.get("/events", (req, res) => {
   res.flushHeaders();
 
   addClient(res);
-  req.on("close", () => removeClient(res)); // Clean up after the connection is closed
+  req.on("close", () => removeClient(res));
 });
 
 // Start the server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
