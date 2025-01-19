@@ -3,26 +3,22 @@ const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");
 const connectDB = require("./config/db");
 const { addClient, removeClient } = require("./controllers/eventsHandler");
-require("dotenv").config(); // Load environment variables
+require("dotenv").config(); 
 
 const app = express();
 connectDB();
 
-// Define allowed origins for CORS
-// Alternatively, to customize with explicit options
 app.use(
   cors({
-    origin: "*", // Allow all origins
+    origin: "*", 
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
-    credentials: true, // Allow credentials if needed
+    allowedHeaders: ["Content-Type", "Authorization"], 
+    credentials: true, 
   })
 );
 
-// Middleware to parse JSON requests
 app.use(express.json());
 
-// Serve static files from the "uploads" directory
 app.use("/uploads", express.static("public/uploads"));
 
 // Example API route
