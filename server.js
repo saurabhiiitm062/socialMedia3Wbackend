@@ -14,7 +14,8 @@ const allowedOrigins = ["http://localhost:3000"]; // Frontend URL
 // CORS middleware configuration
 app.use(
   cors({
-    origin: "*", // Specify allowed origins
+    origin: "https://3wsocialmedia.netlify.app", // Correct URL without the trailing slash
+    methods: ["GET", "POST", "PUT", "DELETE"], // Use an array for methods
   })
 );
 
