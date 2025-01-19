@@ -9,32 +9,13 @@ const app = express();
 connectDB();
 
 // Define allowed origins for CORS
-const allowedOrigins = [
-  "https://3wsocialmedia.netlify.app",
-  /\.netlify\.app$/, // Regex for any subdomain under netlify.app
-];
-
+// Alternatively, to customize with explicit options
 app.use(
   cors({
-    origin: (origin, callback) => {
-      console.log("CORS Origin:", origin);
-      // Allow requests from Postman, same-origin, or no origin (e.g., SSR)
-      if (
-        !origin ||
-        allowedOrigins.some((allowedOrigin) =>
-          typeof allowedOrigin === "string"
-            ? origin === allowedOrigin
-            : allowedOrigin.test(origin)
-        )
-      ) {
-        callback(null, true); // Allow the request
-      } else {
-        callback(new Error("Not allowed by CORS")); // Block the request
-      }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: "*", // Allow all origins
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
+    credentials: true, // Allow credentials if needed
   })
 );
 
